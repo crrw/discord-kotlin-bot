@@ -11,7 +11,7 @@ COPY . /discord-kotlin-bot
 RUN chmod +x ./gradlew
 
 # Update the package list and install the required packages
-RUN apt update && apt install -y findutils
+RUN apk update && apk add findutils
 
 # Build the application
 RUN ./gradlew build
