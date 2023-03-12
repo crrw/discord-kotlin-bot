@@ -5,7 +5,7 @@ FROM openjdk:latest
 WORKDIR /discord-kotlin-bot
 
 # Copy the source code into the container at /discord-kotlin-bot
-COPY . .
+COPY . /discord-kotlin-bot
 
 # Set executable permission for gradlew
 RUN chmod +x ./gradlew
