@@ -18,7 +18,7 @@ class EventListener : ListenerAdapter() {
     )
 
     override fun onMessageReactionAdd(event: MessageReactionAddEvent) {
-        if(event.messageIdLong == messageKey) {
+        if (event.messageIdLong == messageKey) {
 
             val userId: Long = event.userId.toLong()
             val reactionCode: String = event.reaction.emoji.asReactionCode
@@ -38,7 +38,7 @@ class EventListener : ListenerAdapter() {
     }
 
     override fun onMessageReactionRemove(event: MessageReactionRemoveEvent) {
-        if(event.messageIdLong == messageKey) {
+        if (event.messageIdLong == messageKey) {
 
             val userId: Long = event.userId.toLong()
             val reactionCode: String = event.reaction.emoji.asReactionCode
@@ -64,5 +64,4 @@ class EventListener : ListenerAdapter() {
             event.channel.sendMessage("pong").queue()
         }
     }
-
 }
