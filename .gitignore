@@ -1,4 +1,22 @@
-.env
-.gradle
-.idea
-build/**
+# Gradle build files
+build/
+.gradle/
+buildSrc/
+
+# IntelliJ IDEA files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Kotlin files
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+
+# Miscellaneous
+.DS_Store
+Thumbs.db
