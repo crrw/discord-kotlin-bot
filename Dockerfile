@@ -10,8 +10,8 @@ COPY . /discord-kotlin-bot
 # Set executable permission for gradlew
 RUN chmod +x ./gradlew
 
-# Update the package list and install the required packages
-RUN yum update -y && yum install -y findutils
+# Install findutils package
+RUN apk update && apk add findutils
 
 # Build the application
 RUN ./gradlew build
