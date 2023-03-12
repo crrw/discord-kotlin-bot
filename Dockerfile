@@ -10,6 +10,9 @@ COPY . /discord-kotlin-bot
 # Set executable permission for gradlew
 RUN chmod +x ./gradlew
 
+# Install findutils package to include xargs command
+RUN apt-get update && apt-get install -y findutils
+
 # Build the application
 RUN ./gradlew build
 
