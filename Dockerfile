@@ -10,9 +10,6 @@ COPY . /discord-kotlin-bot
 # Set executable permission for gradlew
 RUN chmod +x ./gradlew
 
-# Install findutils package
-RUN apk update && apk add findutils
-
 # Build the application
 RUN ./gradlew build
 
