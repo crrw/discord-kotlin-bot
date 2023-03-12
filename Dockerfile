@@ -7,6 +7,9 @@ WORKDIR /discord-kotlin-bot
 # Copy the source code into the container at /discord-kotlin-bot
 COPY . .
 
+# Set executable permission for gradlew
+RUN chmod +x ./gradlew
+
 # Build the application
 RUN ./gradlew build
 
