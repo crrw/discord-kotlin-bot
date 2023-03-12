@@ -1,1 +1,0 @@
-D:\code\ideaProjects\discord-kotlin-bot\build\classes\kotlin\main\MainKt.class;D:\code\ideaProjects\discord-kotlin-bot\build\classes\kotlin\main\listeners\EventListener.class;D:\code\ideaProjects\discord-kotlin-bot\build\classes\kotlin\main\service\Bot.class
