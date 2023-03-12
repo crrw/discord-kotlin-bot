@@ -1,7 +1,9 @@
 package listeners
 
 import net.dv8tion.jda.api.entities.Role
+import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.entities.UserSnowflake
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent
@@ -21,6 +23,7 @@ class EventListener : ListenerAdapter() {
         if (event.messageIdLong == messageKey) {
 
             val userId: Long = event.userId.toLong()
+            val user: User? = event.user
             val reactionCode: String = event.reaction.emoji.asReactionCode
 
             // hacky way, think of a better solution
@@ -28,6 +31,7 @@ class EventListener : ListenerAdapter() {
 
             println("roleID=$roleId")
             println("reactionCode=$reactionCode")
+            println("user=$user")
 
             val role: Role? = event.guild.getRoleById(roleId)
 
@@ -55,6 +59,10 @@ class EventListener : ListenerAdapter() {
                 event.guild.removeRoleFromMember(UserSnowflake.fromId(userId), role).queue()
             }
         }
+    }
+
+    override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
+        val command: String = event.commandString
     }
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
