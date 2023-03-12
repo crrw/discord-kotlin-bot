@@ -1,10 +1,10 @@
 # Base image with the latest version of OpenJDK
 FROM openjdk:latest
 
-# Set the working directory to /app
+# Set the working directory to /discord-kotlin-bot
 WORKDIR /discord-kotlin-bot
 
-# Copy the source code into the container at /app
+# Copy the source code into the container at /discord-kotlin-bot
 COPY . .
 
 # Build the application
