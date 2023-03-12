@@ -1,7 +1,0 @@
-version: 1
-name: discord-kotlin-bot
-services:
-  web:
-    build: .
-    env:
-      PORT: 8080
