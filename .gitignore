@@ -5,6 +5,7 @@ buildSrc/
 gradle.properties
 gradlew.bat
 gradlew
+gradle
 
 # IntelliJ IDEA files
 .idea/
