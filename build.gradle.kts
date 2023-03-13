@@ -17,22 +17,36 @@ group = "org.example"
 version = "1.0-SNAPSHOT"
 
 repositories {
-    google()
     mavenCentral()
 }
 
 dependencies {
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     implementation("net.dv8tion:JDA:5.0.0-beta.5")
+    implementation(kotlin("stdlib-jdk8"))
     testImplementation(kotlin("test"))
-}
-
-tasks.test {
-    useJUnitPlatform()
 }
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+tasks.withType<Jar> {
+    // Otherwise you'll get a "No main manifest attribute" error
+    manifest {
+        attributes["Main-Class"] = "MainKt"
+    }
+
+    // To avoid the duplicate handling strategy error
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    // To add all the dependencies
+    from(sourceSets.main.get().output)
+
+    dependsOn(configurations.runtimeClasspath)
+    from({
+        configurations.runtimeClasspath.get().filter { it.name.endsWith("jar") }.map { zipTree(it) }
+    })
 }
 
 application {
