@@ -4,8 +4,7 @@ import service.Bot
 
 fun main(args: Array<String>) {
 
-    val dotenv: Dotenv = Dotenv.configure().filename(".env").load()
-    val TOKEN: String = dotenv.get("TOKEN")
+    val TOKEN: String = System.getenv("TOKEN")
 
     var bot = Bot(token = TOKEN)
 
