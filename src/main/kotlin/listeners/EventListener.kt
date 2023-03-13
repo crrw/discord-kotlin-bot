@@ -13,10 +13,10 @@ class EventListener : ListenerAdapter() {
     private val messageKey: Long = 1084274832776101888
 
     private val mapOfRoles = mapOf(
-        "1073349979558658119" to "1065386795107360859", // league
-        "1063853351864901723" to "1073350615067021342", // valorant
-        "1073350394010423336" to "1073353362390650961", // minecraft
-        "1084275649398710313" to "1083976192069226556" // movie
+        "1073349979558658119" to "1065386795107360859",
+        "1063853351864901723" to "1073350615067021342",
+        "1073350394010423336" to "1073353362390650961",
+        "1084275649398710313" to "1083976192069226556"
     )
 
     override fun onMessageReactionAdd(event: MessageReactionAddEvent) {
