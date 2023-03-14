@@ -1,5 +1,7 @@
 package listeners
 
+import constants.Emojis
+import constants.Roles
 import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.entities.UserSnowflake
@@ -9,14 +11,18 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 
-class EventListener : ListenerAdapter() {
+/**
+ * Assign role to people based on the emoji they react to
+ */
+class RoleAssigner : ListenerAdapter() {
+
     private val messageKey: Long = 1084274832776101888
 
-    private val mapOfRoles = mapOf(
-        "1073349979558658119" to "1065386795107360859",
-        "1063853351864901723" to "1073350615067021342",
-        "1073350394010423336" to "1073353362390650961",
-        "1084275649398710313" to "1083976192069226556"
+    private val mapOfRoles: Map<String, String> = mapOf(
+        Emojis.LEAGUE.emojiCode to Roles.LEAGUE.roleId,
+        Emojis.VALORANT.emojiCode to Roles.VALORANT.roleId,
+        Emojis.MINECRAFT.emojiCode to Roles.MINECRAFT.roleId,
+        Emojis.VIDEO.emojiCode to Roles.VIDEO.roleId,
     )
 
     override fun onMessageReactionAdd(event: MessageReactionAddEvent) {
@@ -27,7 +33,10 @@ class EventListener : ListenerAdapter() {
             val reactionCode: String = event.reaction.emoji.asReactionCode
 
             // hacky way, think of a better solution
-            val roleId: String = mapOfRoles.getOrDefault(reactionCode.split(":")[1], "")
+            val formattedReactionCode: String = reactionCode.split(":")[1]
+            val roleId: String? = mapOfRoles[formattedReactionCode]
+
+            requireNotNull(roleId) { "roleId must not be null" }
 
             println("roleID=$roleId")
             println("reactionCode=$reactionCode")
@@ -48,10 +57,14 @@ class EventListener : ListenerAdapter() {
             val reactionCode: String = event.reaction.emoji.asReactionCode
 
             // hacky way, think of a better solution
-            val roleId: String = mapOfRoles.getOrDefault(reactionCode.split(":")[1], "")
+            val formattedReactionCode: String = reactionCode.split(":")[1]
+            println(formattedReactionCode)
+            val roleId: String? = mapOfRoles[formattedReactionCode]
 
             println("roleID=$roleId")
             println("reactionCode=$reactionCode")
+
+            requireNotNull(roleId) { "roleId must not be null" }
 
             val role: Role? = event.guild.getRoleById(roleId)
 
@@ -62,7 +75,7 @@ class EventListener : ListenerAdapter() {
     }
 
     override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
-        val command: String = event.commandString
+        TODO()
     }
 
     override fun onMessageReceived(event: MessageReceivedEvent) {
