@@ -1,5 +1,5 @@
 import io.github.cdimascio.dotenv.Dotenv
-import listeners.EventListener
+import listeners.RoleAssigner
 import service.Bot
 
 fun main(args: Array<String>) {
@@ -8,5 +8,5 @@ fun main(args: Array<String>) {
 
     var bot = Bot(token = TOKEN)
 
-    bot.shardManager.addEventListener(EventListener())
+    bot.shardManager.addEventListener(RoleAssigner())
 }
