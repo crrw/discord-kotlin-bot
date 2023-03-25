@@ -27,7 +27,6 @@ class MessageListener : ListenerAdapter() {
         val currentMessage = event.message.contentRaw.split(" ")
 
         if (currentMessage.size != 2) {
-            event.channel.sendMessage("message must be size 2").queue()
             return
         }
 
