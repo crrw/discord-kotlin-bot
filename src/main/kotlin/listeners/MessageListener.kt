@@ -4,8 +4,14 @@ import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
 
+/**
+ * Listen for specific messages in channels
+ */
 class MessageListener : ListenerAdapter() {
 
+    /**
+     * purge 10 messages at a time in any channel where `purge` is typed
+     */
     override fun onMessageReceived(event: MessageReceivedEvent) {
         val channelId = event.message.channel.idLong
         val user: User = event.author
