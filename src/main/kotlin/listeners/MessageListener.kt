@@ -15,11 +15,21 @@ class MessageListener : ListenerAdapter() {
      * purge some number of messages at a time in any channel where `purge` is typed
      */
     override fun onMessageReceived(event: MessageReceivedEvent) {
+
+        if(isBotMessage(event)) {
+            return
+        }
+
         val channelId = event.message.channel.idLong
         val user: User = event.author
         val userId: Long = event.author.idLong
 
         val currentMessage = event.message.contentRaw.split(" ")
+
+        if (currentMessage.size != 2) {
+            event.channel.sendMessage("message must be size 2").queue()
+            return
+        }
 
         if (currentMessage[0].equals("purge", true) &&
             setOfAdmins.contains(event.member?.idLong)
@@ -37,4 +47,6 @@ class MessageListener : ListenerAdapter() {
             }
         }
     }
+
+    private fun isBotMessage(event: MessageReceivedEvent): Boolean = event.member?.user?.idLong == 1065407140413587476
 }
