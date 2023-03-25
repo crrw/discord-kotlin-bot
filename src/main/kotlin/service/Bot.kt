@@ -1,5 +1,7 @@
 package service
 
+import listeners.MessageListener
+import listeners.RoleAssigner
 import net.dv8tion.jda.api.OnlineStatus
 import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.requests.GatewayIntent
@@ -15,5 +17,7 @@ data class Bot(val token: String) {
         .enableIntents(GatewayIntent.MESSAGE_CONTENT)
         .setStatus(OnlineStatus.ONLINE)
         .setActivity(Activity.watching("testing"))
+        .addEventListeners(RoleAssigner())
+        .addEventListeners(MessageListener())
         .build()
 }
