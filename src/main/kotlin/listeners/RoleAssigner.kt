@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.Role
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.entities.UserSnowflake
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
@@ -75,5 +76,13 @@ class RoleAssigner : ListenerAdapter() {
 
     override fun onSlashCommandInteraction(event: SlashCommandInteractionEvent) {
         TODO()
+    }
+
+    override fun onMessageReceived(event: MessageReceivedEvent) {
+        val message: String = event.message.contentRaw
+
+        if (message.equals("ping", true)) {
+            event.channel.sendMessage("pong").queue()
+        }
     }
 }
