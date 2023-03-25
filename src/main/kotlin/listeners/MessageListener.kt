@@ -9,6 +9,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter
  */
 class MessageListener : ListenerAdapter() {
 
+    private val setOfAdmins = setOf(1039600188446220359, 148646710787178496)
+
     /**
      * purge 10 messages at a time in any channel where `purge` is typed
      */
@@ -18,7 +20,7 @@ class MessageListener : ListenerAdapter() {
         val userId: Long = event.author.idLong
 
         if (event.message.contentRaw.equals("purge", true) &&
-            (event.member?.idLong == 1039600188446220359 || event.member?.idLong == 148646710787178496)
+            (setOfAdmins.contains(event.member?.idLong))
         ) {
             val channel = event.jda.getTextChannelById(channelId)
 
