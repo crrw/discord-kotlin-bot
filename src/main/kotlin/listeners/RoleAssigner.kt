@@ -33,7 +33,6 @@ class RoleAssigner : ListenerAdapter() {
             val userId: Long = event.userId.toLong()
             val user: User? = event.user
             val reactionCode: String = event.reaction.emoji.asReactionCode
-            println(reactionCode)
 
             // hacky way, think of a better solution
             val formattedReactionCode: String = reactionCode.split(":")[1]
