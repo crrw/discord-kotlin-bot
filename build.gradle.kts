@@ -25,6 +25,7 @@ dependencies {
     implementation("net.dv8tion:JDA:5.0.0-beta.5")
     implementation(kotlin("stdlib-jdk8"))
     testImplementation(kotlin("test"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0-Beta")
 }
 
 tasks.withType<KotlinCompile> {

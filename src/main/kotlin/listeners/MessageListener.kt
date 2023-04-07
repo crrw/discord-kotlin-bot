@@ -16,7 +16,7 @@ class MessageListener : ListenerAdapter() {
      */
     override fun onMessageReceived(event: MessageReceivedEvent) {
 
-        if(isBotMessage(event)) {
+        if (isBotMessage(event)) {
             return
         }
 
