@@ -23,6 +23,8 @@ class RoleAssigner : ListenerAdapter() {
         Emojis.VALORANT.emojiCode to Roles.VALORANT.roleId,
         Emojis.MINECRAFT.emojiCode to Roles.MINECRAFT.roleId,
         Emojis.VIDEO.emojiCode to Roles.VIDEO.roleId,
+        Emojis.MAPLESTORY.emojiCode to Roles.MAPLESTORY.roleId,
+        Emojis.SUMMONERSWAR.emojiCode to Roles.SUMMONERSWAR.roleId
     )
 
     override fun onMessageReactionAdd(event: MessageReactionAddEvent) {
