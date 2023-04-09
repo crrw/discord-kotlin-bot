@@ -7,7 +7,7 @@ import java.sql.DriverManager
 
 class PostgresConnection(jdbcUrl: String, userName: String, password: String) {
 
-    val connection: Connection = DriverManager.getConnection(jdbcUrl, userName, password)
+    private val connection: Connection = DriverManager.getConnection(jdbcUrl, userName, password)
 
     fun executeSelectQuery(): List<Request> {
         val query = connection.prepareStatement(Queries.selectQuery)
@@ -22,7 +22,6 @@ class PostgresConnection(jdbcUrl: String, userName: String, password: String) {
             requests.add(request)
         }
 
-        println("select query")
         return requests
     }
 
@@ -31,8 +30,7 @@ class PostgresConnection(jdbcUrl: String, userName: String, password: String) {
 
         preparedStatement.setString(1, id)
         val row = preparedStatement.executeUpdate()
-        println("insert query")
-        println(row)
+        println("inserted $row column")
     }
 
     fun executeDeleteQuery(id: String) {
@@ -40,18 +38,13 @@ class PostgresConnection(jdbcUrl: String, userName: String, password: String) {
 
         preparedStatement.setString(1, id)
         val row = preparedStatement.executeUpdate()
-        println("delete query")
-        println(row)
+        println("deleted $row columns")
     }
 
     fun executeTruncateQuery() {
         val preparedStatement = connection.prepareStatement(Queries.truncateQuery)
 
         preparedStatement.execute()
-        println("truncate query")
-    }
-
-    fun isValue(): Boolean {
-        return connection.isValid(0)
+        println("executed truncate query")
     }
 }

@@ -1,4 +1,3 @@
-//import io.github.cdimascio.dotenv.Dotenv
 import service.Bot
 import service.PostgresConnection
 
@@ -20,6 +19,6 @@ fun main(args: Array<String>) {
      */
 
     val connection = PostgresConnection(jdbcUrl, userName, password)
-    println(connection.isValue())
+    println("connected")
     val bot = Bot(token = TOKEN, connection)
 }

@@ -13,13 +13,16 @@ import service.PostgresConnection
 class MessageListener(private val connection: PostgresConnection) : ListenerAdapter() {
 
     private val setOfAdmins = setOf(1039600188446220359, 148646710787178496)
+    private val filteredUsers = setOf(790216533464711168)
+    private val requestChannel = 1094440712289910924
 
     /**
      * purge some number of messages at a time in any channel where `purge` is typed
      */
     override fun onMessageReceived(event: MessageReceivedEvent) {
         // don't let jinag use to the bot
-        if (event.author.idLong == 790216533464711168) {
+        if (filteredUsers.contains(event.author.idLong)) {
+            println("caught filtered user")
             return
         }
 
@@ -71,16 +74,15 @@ class MessageListener(private val connection: PostgresConnection) : ListenerAdap
             return
         }
 
-        if (event.channel.idLong != 1084168252885848214) {
+        if (event.channel.idLong != requestChannel) {
             return
         }
 
         val requests: List<Request> = connection.executeSelectQuery()
 
-        val testChannel: TextChannel? = event.guild.getTextChannelById(1084168252885848214)
-        requireNotNull(testChannel) { "channel must not be null" }
+        val requestChannel = getRequestChannel(event)
 
-        requests.forEach { request -> testChannel.sendMessage(request.name).queue() }
+        requests.forEach { request -> requestChannel.sendMessage(request.name).queue() }
     }
 
     private fun getRequest(event: MessageReceivedEvent) {
@@ -88,21 +90,24 @@ class MessageListener(private val connection: PostgresConnection) : ListenerAdap
             return
         }
 
-        if (event.channel.idLong != 1084168252885848214) {
+        if (!isUserAdmin(event)) {
             return
         }
 
-        val testChannel: TextChannel? = event.guild.getTextChannelById(1084168252885848214)
-        requireNotNull(testChannel) { "channel must not be null" }
+        if (event.channel.idLong != requestChannel) {
+            return
+        }
+
+        val requestChannel = getRequestChannel(event)
 
         val requests: List<Request> = connection.executeSelectQuery()
         if (requests.isEmpty()) {
-            testChannel.sendMessage("queue is empty").queue()
+            requestChannel.sendMessage("queue is empty").queue()
             return
         }
 
         val request = requests[0]
-        testChannel.sendMessage(request.name).queue()
+        requestChannel.sendMessage(request.name).queue()
         connection.executeDeleteQuery(request.name)
     }
 
@@ -111,7 +116,7 @@ class MessageListener(private val connection: PostgresConnection) : ListenerAdap
             return
         }
 
-        if (event.channel.idLong != 1084168252885848214) {
+        if (event.channel.idLong != requestChannel) {
             return
         }
 
@@ -123,11 +128,10 @@ class MessageListener(private val connection: PostgresConnection) : ListenerAdap
 
         val filteredList = currentMessage.filterIndexed { index, _ -> index != 0 }
 
-        val testChannel: TextChannel? = event.guild.getTextChannelById(1084168252885848214)
-        requireNotNull(testChannel) { "channel must not be null" }
+        val requestChannel = getRequestChannel(event)
 
         connection.executeInsertQuery(filteredList.joinToString(" "))
-        testChannel.sendMessage("queued").queue()
+        requestChannel.sendMessage("queued").queue()
     }
 
     private fun clearTable(event: MessageReceivedEvent) {
@@ -135,12 +139,23 @@ class MessageListener(private val connection: PostgresConnection) : ListenerAdap
             return
         }
 
-        if (event.channel.idLong != 1084168252885848214) {
+        if (!isUserAdmin(event)) {
+            return
+        }
+
+        if (event.channel.idLong != requestChannel) {
             return
         }
 
         connection.executeTruncateQuery()
     }
 
-    private fun isBotMessage(event: MessageReceivedEvent): Boolean = event.member?.user?.idLong == 1065407140413587476
+    private fun isBotMessage(event: MessageReceivedEvent): Boolean = event.author.idLong == 1065407140413587476
+    private fun isUserAdmin(event: MessageReceivedEvent): Boolean = setOfAdmins.contains(event.author.idLong)
+    private fun getRequestChannel(event: MessageReceivedEvent): TextChannel {
+        val testChannel: TextChannel? = event.guild.getTextChannelById(requestChannel)
+        requireNotNull(testChannel) { "channel must not be null" }
+
+        return testChannel
+    }
 }
