@@ -83,6 +83,7 @@ class MessageListener(private val connection: PostgresConnection) : ListenerAdap
         val requestChannel = getRequestChannel(event)
 
         requests.forEach { request -> requestChannel.sendMessage(request.name).queue() }
+        println("user=${event.author} get all request")
     }
 
     private fun getRequest(event: MessageReceivedEvent) {
@@ -109,6 +110,7 @@ class MessageListener(private val connection: PostgresConnection) : ListenerAdap
         val request = requests[0]
         requestChannel.sendMessage(request.name).queue()
         connection.executeDeleteQuery(request.name)
+        println("user=${event.author} get request")
     }
 
     private fun addRequest(event: MessageReceivedEvent) {
@@ -132,6 +134,7 @@ class MessageListener(private val connection: PostgresConnection) : ListenerAdap
 
         connection.executeInsertQuery(filteredList.joinToString(" "))
         requestChannel.sendMessage("queued").queue()
+        println("user=${event.author} insert request")
     }
 
     private fun clearTable(event: MessageReceivedEvent) {
@@ -148,6 +151,7 @@ class MessageListener(private val connection: PostgresConnection) : ListenerAdap
         }
 
         connection.executeTruncateQuery()
+        println("user=${event.author} truncate request")
     }
 
     private fun isBotMessage(event: MessageReceivedEvent): Boolean = event.author.idLong == 1065407140413587476

@@ -29,22 +29,19 @@ class PostgresConnection(jdbcUrl: String, userName: String, password: String) {
         val preparedStatement = connection.prepareStatement(Queries.insertQuery)
 
         preparedStatement.setString(1, id)
-        val row = preparedStatement.executeUpdate()
-        println("inserted $row column")
+        preparedStatement.executeUpdate()
     }
 
     fun executeDeleteQuery(id: String) {
         val preparedStatement = connection.prepareStatement(Queries.deleteQuery)
 
         preparedStatement.setString(1, id)
-        val row = preparedStatement.executeUpdate()
-        println("deleted $row columns")
+        preparedStatement.executeUpdate()
     }
 
     fun executeTruncateQuery() {
         val preparedStatement = connection.prepareStatement(Queries.truncateQuery)
 
         preparedStatement.execute()
-        println("executed truncate query")
     }
 }
