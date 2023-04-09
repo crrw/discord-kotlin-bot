@@ -21,8 +21,11 @@ repositories {
 }
 
 dependencies {
+    implementation("com.zaxxer:HikariCP:5.0.1")
     implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
     implementation("net.dv8tion:JDA:5.0.0-beta.5")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0-Beta")
+    implementation("org.postgresql:postgresql:42.5.4")
     implementation(kotlin("stdlib-jdk8"))
     testImplementation(kotlin("test"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0-Beta")

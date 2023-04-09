@@ -11,13 +11,13 @@ import net.dv8tion.jda.api.sharding.ShardManager
 /**
  * Initial set up for the bot
  */
-data class Bot(val token: String) {
+data class Bot(val token: String, val connection: PostgresConnection) {
 
     val shardManager: ShardManager = DefaultShardManagerBuilder.createDefault(token)
         .enableIntents(GatewayIntent.MESSAGE_CONTENT)
         .setStatus(OnlineStatus.ONLINE)
         .setActivity(Activity.watching("testing"))
         .addEventListeners(RoleAssigner())
-        .addEventListeners(MessageListener())
+        .addEventListeners(MessageListener(connection))
         .build()
 }
