@@ -59,6 +59,9 @@ class RoleAssigner : ListenerAdapter() {
             val reactionCode: String = event.reaction.emoji.asReactionCode
 
             // hacky way, think of a better solution
+            // League:numbers
+            // input -> ["league" "numbers"]
+            // "numbers"
             val formattedReactionCode: String = reactionCode.split(":")[1]
             println(formattedReactionCode)
             val roleId: String? = mapOfRoles[formattedReactionCode]
