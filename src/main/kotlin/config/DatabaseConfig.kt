@@ -9,8 +9,8 @@ import java.sql.Connection
 class DatabaseConfig {
 
     val TOKEN: String = System.getenv("TOKEN")
-    val jdbcUrl = System.getenv("url")
-    val userName = System.getenv("user")
+    val url = System.getenv("url")
+    val user = System.getenv("user")
     val password = System.getenv("password")
 
     //    for local testing
