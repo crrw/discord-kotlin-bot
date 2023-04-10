@@ -1,6 +1,5 @@
 package config
 
-import io.github.cdimascio.dotenv.Dotenv
 import service.Bot
 import service.DataSource
 import service.PostgresService
@@ -33,5 +32,4 @@ class DatabaseConfig {
 
         return getDataSource().connectUsingDataSource()
     }
-
 }
