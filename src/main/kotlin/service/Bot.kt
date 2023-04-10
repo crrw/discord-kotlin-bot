@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.sharding.ShardManager
 /**
  * Initial set up for the bot
  */
-data class Bot(val token: String, val connection: PostgresConnection) {
+data class Bot(val token: String, val connection: PostgresService) {
 
     val shardManager: ShardManager = DefaultShardManagerBuilder.createDefault(token)
         .enableIntents(GatewayIntent.MESSAGE_CONTENT)

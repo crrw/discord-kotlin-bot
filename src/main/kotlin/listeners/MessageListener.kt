@@ -5,12 +5,12 @@ import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent
 import net.dv8tion.jda.api.hooks.ListenerAdapter
-import service.PostgresConnection
+import service.PostgresService
 
 /**
  * Listen for specific messages in channels
  */
-class MessageListener(private val connection: PostgresConnection) : ListenerAdapter() {
+class MessageListener(private val connection: PostgresService) : ListenerAdapter() {
 
     private val setOfAdmins = setOf(1039600188446220359, 148646710787178496)
     private val filteredUsers = setOf(790216533464711168)

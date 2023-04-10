@@ -3,11 +3,8 @@ package service
 import constants.Queries
 import model.Request
 import java.sql.Connection
-import java.sql.DriverManager
 
-class PostgresConnection(jdbcUrl: String, userName: String, password: String) {
-
-    private val connection: Connection = DriverManager.getConnection(jdbcUrl, userName, password)
+class PostgresService(private val connection: Connection) {
 
     fun executeSelectQuery(): List<Request> {
         val query = connection.prepareStatement(Queries.selectQuery)
