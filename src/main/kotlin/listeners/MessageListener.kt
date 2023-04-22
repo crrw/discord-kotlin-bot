@@ -1,5 +1,8 @@
 package listeners
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import model.Request
 import net.dv8tion.jda.api.entities.User
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel
@@ -14,7 +17,8 @@ class MessageListener(private val connection: PostgresService) : ListenerAdapter
 
     private val setOfAdmins = setOf(1039600188446220359, 148646710787178496)
     private val filteredUsers = setOf(790216533464711168)
-    private val requestChannel = 1094440712289910924
+    private val REQUEST_CHANNEL = 1094440712289910924
+    private val TEST_CHANNEL = 1084168252885848214
 
     /**
      * purge some number of messages at a time in any channel where `purge` is typed
@@ -28,13 +32,33 @@ class MessageListener(private val connection: PostgresService) : ListenerAdapter
 
         val message = event.message.contentRaw
         val request: List<String> = message.split(" ")
+        val customScope = CoroutineScope(Dispatchers.IO)
+
+        if (connection.isClosed()) {
+            connection.connect()
+        }
 
         when {
             request[0].equals("purge", true) -> purgeRequest(event)
-            request[0].equals("getAll", true) -> getAllRequest(event)
-            request[0].equals("getOne", true) -> getRequest(event)
-            request[0].equals("addRequest", true) -> addRequest(event)
-            request[0] == "clearDB" -> clearTable(event)
+            request[0].equals("getAll", true) -> customScope.launch {
+                getAllRequest(event)
+            }
+
+            request[0].equals("getOne", true) -> customScope.launch {
+                getRequest(event)
+            }
+
+            request[0].equals("addRequest", true) -> customScope.launch {
+                addRequest(event)
+            }
+
+            request[0].equals("deleteFrom", true) -> customScope.launch {
+                deleteRequest(event)
+            }
+
+            request[0] == "clearDB" -> customScope.launch {
+                clearTable(event)
+            }
         }
     }
 
@@ -69,56 +93,15 @@ class MessageListener(private val connection: PostgresService) : ListenerAdapter
         }
     }
 
-    private fun getAllRequest(event: MessageReceivedEvent) {
-        if (isBotMessage(event)) {
-            return
-        }
-
-        if (event.channel.idLong != requestChannel) {
-            return
-        }
-
-        val requests: List<Request> = connection.executeSelectQuery()
-
-        val requestChannel = getRequestChannel(event)
-
-        requests.forEach { request -> requestChannel.sendMessage(request.name).queue() }
-        println("user=${event.author} get all request")
-    }
-
-    private fun getRequest(event: MessageReceivedEvent) {
-        if (isBotMessage(event)) {
-            return
-        }
-
-        if (!isUserAdmin(event)) {
-            return
-        }
-
-        if (event.channel.idLong != requestChannel) {
-            return
-        }
-
-        val requestChannel = getRequestChannel(event)
-
-        val requests: List<Request> = connection.executeSelectQuery()
-        if (requests.isEmpty()) {
-            requestChannel.sendMessage("queue is empty").queue()
-            return
-        }
-
-        val request = requests[0]
-        requestChannel.sendMessage(request.name).queue()
-        connection.executeDeleteQuery(request.name)
-        println("user=${event.author} get request")
-    }
-
+//    ----------------------------- database requests ------------------------------
     private fun addRequest(event: MessageReceivedEvent) {
         if (isBotMessage(event)) {
             return
         }
 
-        if (event.channel.idLong != requestChannel) {
+        val channelId = event.channel.idLong
+
+        if (channelId != REQUEST_CHANNEL) {
             return
         }
 
@@ -133,6 +116,7 @@ class MessageListener(private val connection: PostgresService) : ListenerAdapter
         val requestChannel = getRequestChannel(event)
 
         connection.executeInsertQuery(filteredList.joinToString(" "))
+
         requestChannel.sendMessage("queued").queue()
         println("user=${event.author} insert request")
     }
@@ -146,7 +130,7 @@ class MessageListener(private val connection: PostgresService) : ListenerAdapter
             return
         }
 
-        if (event.channel.idLong != requestChannel) {
+        if (event.channel.idLong != REQUEST_CHANNEL) {
             return
         }
 
@@ -154,12 +138,80 @@ class MessageListener(private val connection: PostgresService) : ListenerAdapter
         println("user=${event.author} truncate request")
     }
 
+    private fun getAllRequest(event: MessageReceivedEvent) {
+        if (isBotMessage(event)) {
+            return
+        }
+
+        if (event.channel.idLong != REQUEST_CHANNEL) {
+            return
+        }
+
+        val requests: List<Request> = connection.executeSelectQuery()
+
+        val requestChannel = getRequestChannel(event)
+
+        requests.forEach { request ->
+            requestChannel
+                .sendMessage("id=${request.id}, name=${request.name}")
+                .queue()
+        }
+
+        println("user=${event.author} get all request")
+    }
+
+    private fun getRequest(event: MessageReceivedEvent) {
+        if (isBotMessage(event)) {
+            return
+        }
+
+        if (!isUserAdmin(event)) {
+            return
+        }
+
+        if (event.channel.idLong != REQUEST_CHANNEL) {
+            return
+        }
+
+        val requestChannel = getRequestChannel(event)
+
+        val requests: List<Request> = connection.executeSelectQuery()
+        if (requests.isEmpty()) {
+            requestChannel.sendMessage("queue is empty").queue()
+            return
+        }
+
+        val request = requests[0]
+        requestChannel.sendMessage(request.name).queue()
+        connection.executeDeleteQuery(request.id)
+        println("user=${event.author} get request")
+    }
+
+    private fun deleteRequest(event: MessageReceivedEvent) {
+        if (isBotMessage(event)) {
+            return
+        }
+
+        if (event.channel.idLong != REQUEST_CHANNEL) {
+            return
+        }
+
+        val requestChannel = getRequestChannel(event)
+        requestChannel.sendMessage("deleted").queue()
+        val id = event.message.contentRaw.split(" ")[1].toInt()
+
+        connection.executeDeleteQuery(id)
+        println("user=${event.author} get request")
+    }
+
     private fun isBotMessage(event: MessageReceivedEvent): Boolean = event.author.idLong == 1065407140413587476
     private fun isUserAdmin(event: MessageReceivedEvent): Boolean = setOfAdmins.contains(event.author.idLong)
-    private fun getRequestChannel(event: MessageReceivedEvent): TextChannel {
-        val testChannel: TextChannel? = event.guild.getTextChannelById(requestChannel)
-        requireNotNull(testChannel) { "channel must not be null" }
 
-        return testChannel
+    // return request channel or exception
+    private fun getRequestChannel(event: MessageReceivedEvent): TextChannel {
+        val requestChannel: TextChannel? = event.guild.getTextChannelById(REQUEST_CHANNEL)
+        requireNotNull(requestChannel) { "channel must not be null" }
+
+        return requestChannel
     }
 }
