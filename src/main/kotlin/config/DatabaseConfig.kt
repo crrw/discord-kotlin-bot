@@ -2,23 +2,22 @@ package config
 
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
-import io.github.cdimascio.dotenv.Dotenv
 import service.Bot
 import service.PostgresService
 
 class DatabaseConfig {
 
-//    val TOKEN: String = System.getenv("TOKEN")
-//    val url = System.getenv("url")
-//    val user = System.getenv("user")
-//    val password = System.getenv("password")
+    private val TOKEN: String = System.getenv("TOKEN")
+    private val url = System.getenv("url")
+    private val user = System.getenv("user")
+    private val password = System.getenv("password")
 
 //    for local testing
-    private val env: Dotenv = Dotenv.configure().filename(".env").load()
-    private val TOKEN = env.get("TOKEN")
-    private val url = env.get("url")
-    private val user = env.get("user")
-    private val password = env.get("password")
+//    private val env: Dotenv = Dotenv.configure().filename(".env").load()
+//    private val TOKEN = env.get("TOKEN")
+//    private val url = env.get("url")
+//    private val user = env.get("user")
+//    private val password = env.get("password")
 
     fun startBot() {
 
