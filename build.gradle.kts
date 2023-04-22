@@ -28,7 +28,6 @@ dependencies {
     implementation("org.postgresql:postgresql:42.5.4")
     implementation(kotlin("stdlib-jdk8"))
     testImplementation(kotlin("test"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.0-Beta")
 }
 
 tasks.withType<KotlinCompile> {
