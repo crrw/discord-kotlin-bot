@@ -31,6 +31,7 @@ class DatabaseConfig {
         config.username = user
         config.password = password
         config.keepaliveTime = 600000L
+
         config.addDataSourceProperty("cachePrepStmts", true)
         config.addDataSourceProperty("prepStmtCacheSize", 250)
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048")
